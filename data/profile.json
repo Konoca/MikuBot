@@ -1,0 +1,14 @@
+{
+    "status_history": [
+        {
+            "type": "playing",
+            "name": "a game",
+            "user": "kona#0157 (150729458548998145)"
+        }
+    ],
+    "status": {
+        "type": "watching",
+        "name": "the world burn",
+        "user": "kona#0157 (150729458548998145)"
+    }
+}

@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import asyncio
-from typing import List
 from objects import YTDLSource, YTVid, EmbedMaker, GuildData
 
 ydl_opts = YTDLSource.get_ytdl_opts()
@@ -10,7 +9,7 @@ ydl_opts = YTDLSource.get_ytdl_opts()
 class Music(commands.Cog):
     def __init__(self, bot):
         self.bot: commands.Bot = bot
-        self.guilds = {}  # GUILD_ID: GuildData()
+        self.guilds: dict[int, GuildData] = {}
 
     """Events"""
 

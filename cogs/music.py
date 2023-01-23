@@ -85,10 +85,12 @@ class Music(commands.Cog):
             guild.voice_client = voice_client
             guild.repeat_video = False
 
-        url_list = ['https://www.youtube.com', 'www.youtube.com']
-        if not list(filter(query_or_url.startswith, url_list)) != []:
+        url_list = ['https://www.youtube.com', 'www.youtube.com', 'https://youtu.be', 'youtu.be']
+        if list(filter(query_or_url.startswith, url_list)):
             search_results = await YTVid.search(query_or_url)
-            yt_vid: YTVid = await EmbedMaker.create_yt_search_embed(interaction, self.bot, query_or_url, search_results)
+            yt_vid: YTVid = await EmbedMaker.create_yt_search_embed(
+                interaction, self.bot, query_or_url, search_results
+            )
             if not yt_vid:
                 return
         else:

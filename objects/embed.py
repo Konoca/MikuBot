@@ -26,10 +26,15 @@ class EmbedMaker:
         self.embed.set_image(url=image_url)
 
     async def send_embed(self, interaction: discord.Interaction, view: View=None, response=False):
-        if response:
+        # TODO this hurts to look at, clean it
+        if response and view:
             await interaction.response.send_message(embed=self.embed, view=view)
-        else:
+        elif response:
+            await interaction.response.send_message(embed=self.embed)
+        elif view:
             await interaction.channel.send(embed=self.embed, view=view)
+        else:
+            await interaction.channel.send(embed=self.embed)
 
 
     @classmethod

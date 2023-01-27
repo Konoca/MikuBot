@@ -1,4 +1,5 @@
 import asyncio
+import discord
 from objects import YTVid
 
 class GuildData:
@@ -8,3 +9,4 @@ class GuildData:
         self.current_video: YTVid = None
         self.repeat_video = False
         self.music_task: asyncio.Task = None
+

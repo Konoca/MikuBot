@@ -37,7 +37,7 @@ class EmbedMaker:
         embed = EmbedMaker(title, description)
         await embed.send_embed(interaction, response=response)
 
-    
+
     @classmethod
     async def error_response(cls, interaction: discord.Interaction, description: str):
         await EmbedMaker.create_text_embed(interaction, 'Error', description, response=True)
@@ -79,11 +79,11 @@ class EmbedMaker:
         )
 
         embed2 = EmbedMaker(f'Search results for "{query}"', '**Selection cancelled**')
-            
+
         if selection.data['custom_id'] == 'cancel':
             await selection.message.edit(embed=embed2.embed, view=None)
             return None
 
-        await selection.message.edit(embed=embed.embed, view=None)        
+        await selection.message.edit(embed=embed.embed, view=None)
         return results[int(selection.data['custom_id'])]
 

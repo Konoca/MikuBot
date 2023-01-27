@@ -1,7 +1,7 @@
 {
     "current": [
         "Added support for official shortened youtube urls (youtu.be)",
-        "Added command to check most recent changes (/changes)",
+        "Added command to check most recent changes (/changelogs)",
         "Added script to generate needed files not in VCS",
         "Fixed message not being sent when a video was added to queue",
         "Fixed issue regarding using bot in one server causing the bot to sometimes stop in another",

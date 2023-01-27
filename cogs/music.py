@@ -100,13 +100,13 @@ class Music(commands.Cog):
         if len(guild.song_queue) == 1 and not guild.current_video:
             guild.current_video = yt_vid
             # await interaction.channel.send(f'**Selected:** {yt_vid.title}')
-            self.music_task = asyncio.create_task(self.start_playing(interaction))
+            guild.music_task = asyncio.create_task(self.start_playing(interaction))
         else:
-            await interaction.channel.send(f"**Queued at position {len(self.song_queue) - 1}:** {yt_vid.title}")
+            await interaction.channel.send(f"**Queued at position {len(guild.song_queue) - 1}:** {yt_vid.title}")
 
     @app_commands.command(name='leave', description='Remove bot from voice channel')
     async def leave(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel:
+        if not self.is_in_voice_channel():
             return
 
         guild = self.guilds[interaction.guild_id]
@@ -121,7 +121,7 @@ class Music(commands.Cog):
 
     @app_commands.command(name='pause', description='Pause player')
     async def pause(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel:
+        if not self.is_in_voice_channel():
             return
 
         guild = self.guilds[interaction.guild_id]
@@ -132,7 +132,7 @@ class Music(commands.Cog):
 
     @app_commands.command(name='resume', description='Resume player')
     async def resume(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel:
+        if not self.is_in_voice_channel():
             return
         guild = self.guilds[interaction.guild_id]
 
@@ -142,7 +142,7 @@ class Music(commands.Cog):
 
     @app_commands.command(name='stop', description='Stops player')
     async def stop(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel:
+        if not self.is_in_voice_channel():
             return
 
         guild = self.guilds[interaction.guild_id]
@@ -159,7 +159,7 @@ class Music(commands.Cog):
 
     @app_commands.command(name='skip', description='Skip current audio track')
     async def skip(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel:
+        if not self.is_in_voice_channel():
             return
 
         guild = self.guilds[interaction.guild_id]
@@ -177,7 +177,7 @@ class Music(commands.Cog):
 
     @app_commands.command(name='queue', description='Show queue')
     async def queue(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel:
+        if not self.is_in_voice_channel():
             return
 
         guild = self.guilds[interaction.guild_id]
@@ -196,7 +196,7 @@ class Music(commands.Cog):
         app_commands.Choice(name='off', value=0)
     ])
     async def repeat(self, interaction: discord.Interaction, toggle: app_commands.Choice[int]):
-        if not self.is_in_voice_channel:
+        if not self.is_in_voice_channel():
             return
 
         guild = self.guilds[interaction.guild_id]

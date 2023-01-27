@@ -14,7 +14,7 @@ class Main(commands.Cog):
     async def on_ready(self):
         print('Syncing...')
         await self.bot.tree.sync()
-        print(f'{self.bot.user.name}#{self.bot.user.discriminator} online in {len(client.guilds)}')
+        print(f'{self.bot.user.name}#{self.bot.user.discriminator} online in {len(self.bot.guilds)}')
 
     """ Commands """
 

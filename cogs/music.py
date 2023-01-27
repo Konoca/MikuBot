@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 import asyncio
 from objects import YTDLSource, YTVid, EmbedMaker, GuildData
+import traceback
 
 ydl_opts = YTDLSource.get_ytdl_opts()
 
@@ -61,9 +62,7 @@ class Music(commands.Cog):
             guild.music_task = None
 
     def is_in_voice_channel(self, interaction: discord.Interaction):
-        if not self.guilds.get(interaction.guild_id) or not self.guilds[interaction.guild_id].voice_client:
-            return False
-        return True
+        return self.guilds.get(interaction.guild_id) and self.guilds[interaction.guild_id].voice_client
 
     """Commands"""
 
@@ -84,12 +83,10 @@ class Music(commands.Cog):
             guild.voice_client = voice_client
             guild.repeat_video = False
 
-        url_list = ['https://www.youtube.com', 'www.youtube.com', 'https://youtu.be', 'youtu.be']
-        if list(filter(query_or_url.startswith, url_list)):
+        url_list = ['https://www.youtube.com', 'www.youtube.com', 'https://youtu.be']
+        if not list(filter(query_or_url.startswith, url_list)):
             search_results = await YTVid.search(query_or_url)
-            yt_vid: YTVid = await EmbedMaker.create_yt_search_embed(
-                interaction, self.bot, query_or_url, search_results
-            )
+            yt_vid: YTVid = await EmbedMaker.create_yt_search_embed(interaction, self.bot, query_or_url, search_results)
             if not yt_vid:
                 return
         else:
@@ -106,7 +103,7 @@ class Music(commands.Cog):
 
     @app_commands.command(name='leave', description='Remove bot from voice channel')
     async def leave(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel():
+        if not self.is_in_voice_channel(interaction):
             return
 
         guild = self.guilds[interaction.guild_id]
@@ -121,7 +118,7 @@ class Music(commands.Cog):
 
     @app_commands.command(name='pause', description='Pause player')
     async def pause(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel():
+        if not self.is_in_voice_channel(interaction):
             return
 
         guild = self.guilds[interaction.guild_id]
@@ -132,7 +129,7 @@ class Music(commands.Cog):
 
     @app_commands.command(name='resume', description='Resume player')
     async def resume(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel():
+        if not self.is_in_voice_channel(interaction):
             return
         guild = self.guilds[interaction.guild_id]
 
@@ -142,7 +139,7 @@ class Music(commands.Cog):
 
     @app_commands.command(name='stop', description='Stops player')
     async def stop(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel():
+        if not self.is_in_voice_channel(interaction):
             return
 
         guild = self.guilds[interaction.guild_id]
@@ -159,7 +156,7 @@ class Music(commands.Cog):
 
     @app_commands.command(name='skip', description='Skip current audio track')
     async def skip(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel():
+        if not self.is_in_voice_channel(interaction):
             return
 
         guild = self.guilds[interaction.guild_id]
@@ -168,16 +165,12 @@ class Music(commands.Cog):
             await EmbedMaker.error_response(interaction, 'Nothing is currently playing')
             return
 
-        try:
-            # this breaks for some reason and I have no clue why
-            await EmbedMaker.create_text_embed(interaction, 'Skipping', f'{guild.current_video.title}', response=True)
-            guild.voice_client.stop()
-        except Exception:
-            guild.voice_client.stop()
+        await EmbedMaker.create_text_embed(interaction, 'Skipping', f'{guild.current_video.title}', response=True)
+        guild.voice_client.stop()
 
     @app_commands.command(name='queue', description='Show queue')
     async def queue(self, interaction: discord.Interaction):
-        if not self.is_in_voice_channel():
+        if not self.is_in_voice_channel(interaction):
             return
 
         guild = self.guilds[interaction.guild_id]
@@ -196,7 +189,7 @@ class Music(commands.Cog):
         app_commands.Choice(name='off', value=0)
     ])
     async def repeat(self, interaction: discord.Interaction, toggle: app_commands.Choice[int]):
-        if not self.is_in_voice_channel():
+        if not self.is_in_voice_channel(interaction):
             return
 
         guild = self.guilds[interaction.guild_id]

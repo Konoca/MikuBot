@@ -1,5 +1,10 @@
 {
     "current": [
+        "Fixed videos no longer being played",
+        "Added support for live videos (will show length as None)",
+        "Added support for restricted videos"
+    ],
+    "1.2.1": [
         "Added support for official shortened youtube urls (youtu.be)",
         "Added command to check most recent changes (/changelogs)",
         "Added script to generate needed files not in VCS",

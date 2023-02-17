@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
-import youtube_dl
+#import youtube_dl
+import yt_dlp
 import asyncio
 
 ytdl_format_options = {
@@ -21,7 +22,8 @@ ffmpeg_options = {
     'options': '-vn',
 }
 
-ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+#ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+ytdl = yt_dlp.YoutubeDL(ytdl_format_options)
 
 
 class YTDLSource(discord.PCMVolumeTransformer):

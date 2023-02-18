@@ -1,5 +1,8 @@
 {
     "current": [
+        "Fixed videos ending early"
+    ],
+    "1.2.3": [
         "Fixed videos no longer being played",
         "Added support for live videos (will show length as None)",
         "Added support for restricted videos"

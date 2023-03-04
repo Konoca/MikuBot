@@ -195,7 +195,7 @@ class Music(commands.Cog):
         guild = self.guilds[interaction.guild_id]
 
         guild.repeat_video = False
-        if toggle:
+        if toggle.value:
             guild.repeat_video = True
 
         await interaction.response.send_message(f'Repeating of {guild.current_video.title} set to {guild.repeat_video}')

@@ -1,5 +1,8 @@
 {
     "current": [
+        "Fixed not being able to turn off repeat"
+    ],
+    "1.2.4": [
         "Fixed videos ending early"
     ],
     "1.2.3": [

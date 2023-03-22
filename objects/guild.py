@@ -9,5 +9,4 @@ class GuildData:
         self.current_video: YTVid = None
         self.repeat_video = False
         self.music_task: asyncio.Task = None
-        self.last_interaction: discord.Interaction = None
 

@@ -18,6 +18,16 @@ class Music(commands.Cog):
     async def on_ready(self):
         print('Music cog ready!')
 
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceChannel):
+        guild = self.guilds[member.guild.id]
+        if len(guild.voice_client.channel.members) == 1:
+            await guild.voice_client.disconnect()
+            guild.voice_client = None
+            guild.current_video = None
+            await self.end_task(guild)
+            guild.song_queue = []
+
     """Helpers"""
 
     def end_video(self, yt_vid: YTVid, guild: GuildData):

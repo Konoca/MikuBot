@@ -1,5 +1,9 @@
 {
     "current": [
+        "Fixed bot not responding after joining voice channel",
+        "Bot now automatically leaves when voice channel is empty"
+    ],
+    "1.2.5": [
         "Fixed not being able to turn off repeat"
     ],
     "1.2.4": [

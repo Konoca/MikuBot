@@ -1,29 +1,60 @@
-{
-    "current": [
-        "Fixed bot not responding after joining voice channel",
-        "Bot now automatically leaves when voice channel is empty"
-    ],
-    "1.2.5": [
-        "Fixed not being able to turn off repeat"
-    ],
-    "1.2.4": [
-        "Fixed videos ending early"
-    ],
-    "1.2.3": [
-        "Fixed videos no longer being played",
-        "Added support for live videos (will show length as None)",
-        "Added support for restricted videos"
-    ],
-    "1.2.1": [
-        "Added support for official shortened youtube urls (youtu.be)",
-        "Added command to check most recent changes (/changelogs)",
-        "Fixed message not being sent when a video was added to queue",
-        "Fixed issue regarding using bot in one server causing the bot to sometimes stop in another",
-        "Fixed messages being sent despite bot not being in Voice Channel"
-    ],
-    "1.2.0": [
-        "Added support for multiple servers using music functionality",
-        "Added ability to repeat current video",
-        "Restricted status command to bot moderators (not server mods)"
-    ]
-}
+[
+    {
+        "version": "1.2.7",
+        "date": "19 April 2023",
+        "changes": [
+            "Automated behind-the-scenes updates"
+        ]
+    },
+    {
+        "version": "1.2.6",
+        "date": "22 March 2023",
+        "changes": [
+            "Fixed bot not responding after joining voice channel",
+            "Bot now automatically leaves when voice channel is empty"
+        ]
+    },
+    {
+        "version": "1.2.5",
+        "date": "",
+        "changes": [
+            "Fixed not being able to turn off repeat"
+        ]
+    },
+    {
+        "version": "1.2.4",
+        "date": "",
+        "changes": [
+            "Fixed videos ending early"
+        ]
+    },
+    {
+        "version": "1.2.3",
+        "date": "",
+        "changes": [
+            "Fixed videos no longer being played",
+            "Added support for live videos (will show length as None)",
+            "Added support for restricted videos"
+        ]
+    },
+    {
+        "version": "1.2.1",
+        "date": "",
+        "changes": [
+            "Added support for official shortened youtube urls (youtu.be)",
+            "Added command to check most recent changes (/changelogs)",
+            "Fixed message not being sent when a video was added to queue",
+            "Fixed issue regarding using bot in one server causing the bot to sometimes stop in another",
+            "Fixed messages being sent despite bot not being in Voice Channel"
+        ]
+    },
+    {
+        "version": "1.2.0",
+        "date": "",
+        "changes": [
+            "Added support for multiple servers using music functionality",
+            "Added ability to repeat current video",
+            "Restricted status command to bot moderators (not server mods)"
+        ]
+    }
+]

@@ -10,9 +10,13 @@ files = {
         'admins': [],
         'mods': []
     },
-    'changelogs': {
-        'current': []
-    }
+    'changelogs': [
+        {
+            'version': '',
+            'date': '',
+            'changes': []
+        }
+    ]
 }
 
 

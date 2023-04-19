@@ -16,6 +16,8 @@ args = parser.parse_args()
 prefix = os.getenv('PREFIX') if not args.prefix else args.prefix
 token = os.getenv('TOKEN') if not args.token else args.token
 
+owner_token = os.getenv('OWNER_TOKEN')
+
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 
 
@@ -31,4 +33,5 @@ async def main():
         await bot.start(token)
 
 
-asyncio.run(main())
+if __name__ == '__main__':
+    asyncio.run(main())

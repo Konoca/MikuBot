@@ -16,19 +16,23 @@ class Main(commands.Cog):
     async def on_ready(self):
         print('Syncing...')
         await self.bot.tree.sync()
-        print(f'{self.bot.user.name}#{self.bot.user.discriminator} online in {len(self.bot.guilds)} servers')
+        print(f'{self.bot.user.name}#{self.bot.user.discriminator} online in {len(self.bot.guilds)} servers.')
 
         with open('./data/changelogs.json', 'r') as f:
             data = json.load(f)
 
+        description = f'v{data[0]["version"]}\nLast Updated: {data[0]["date"]}\nUse /changelogs to view changes'
         r = requests.patch(
             url=f'https://discord.com/api/v9/applications/{self.bot.application_id}',
             headers={'authorization': owner_token},
             json={
-                'description': f'v{data[0]["version"]}\nLast Updated: {data[0]["date"]}\nUse /changelogs to view changes'
+                'description': description
             }
         )
-        print(r)
+        if not r.status_code == 200:
+            print(f'[{r.status_code}] Error updating bio, maybe owner token outdated?')
+            return
+        print('Successfully updated bio.')
 
     """ Commands """
 

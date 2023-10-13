@@ -2,7 +2,7 @@ from youtubesearchpython.__future__ import VideosSearch
 from youtubesearchpython import Video
 
 class YTVid:
-    def __init__(self, result: dict):
+    def __init__(self, result: dict, timestamp: int = 0):
         self.type: str = result.get('type')
         self.id: str = result.get('id')
         self.title: str = result.get('title')
@@ -18,6 +18,7 @@ class YTVid:
         self.accessibility: Accessibility = Accessibility(result.get('accessibility'))
         self.link: str = result.get('link')
         self.shelf_title = result.get('shelfTitle')
+        self.timestamp = timestamp
 
     @classmethod
     async def search(cls, search: str, limit: int=5):

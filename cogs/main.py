@@ -16,7 +16,7 @@ class Main(commands.Cog):
     async def on_ready(self):
         print('Syncing...')
         await self.bot.tree.sync()
-        print(f'{self.bot.user.name}#{self.bot.user.discriminator} online in {len(self.bot.guilds)} servers')
+        print(f'{self.bot.user.name}#{self.bot.user.discriminator} online in {len(self.bot.guilds)} servers.')
 
         with open('./data/changelogs.json', 'r') as f:
             data = json.load(f)
@@ -28,7 +28,10 @@ class Main(commands.Cog):
                 'description': f'v{data[0]["version"]}\nLast Updated: {data[0]["date"]}\nUse /changelogs to view changes'
             }
         )
-        print(r)
+        if not r.status_code == 200:
+            print(f'[{r.status_code}] Error updating bio, maybe owner token outdated?')
+            return
+        print('Successfully updated bio.')
 
     """ Commands """
 

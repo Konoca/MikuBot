@@ -31,7 +31,7 @@ class Music(commands.Cog):
     """Helpers"""
 
     def end_video(self, yt_vid: YTVid, guild: GuildData):
-        print(f'{guild.id} Ended: {yt_vid.title}')
+        print(f'[{guild.id}] Ended: {yt_vid.title}')
         guild.current_video = None
         if guild.repeat_video:
             return
@@ -41,10 +41,11 @@ class Music(commands.Cog):
         guild = self.guilds[interaction.guild_id]
 
         while len(guild.song_queue) > 0 and guild.current_video and guild.voice_client:
-            source = await YTDLSource.from_url(guild.current_video.link, loop=self.bot.loop, stream=True)
+            source: YTDLSource = await YTDLSource.from_url(guild.current_video.link, loop=self.bot.loop, stream=True, timestamp=guild.current_video.timestamp)
             guild.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+            guild.current_video.timestamp = 0
 
-            print(f'{guild.id} Started: {guild.current_video.title}')
+            print(f'[{guild.id}] Started: {guild.current_video.title}')
 
             if not guild.repeat_video:
                 embed = EmbedMaker(title=f'Now playing: {guild.current_video.title}', description=f'By: {guild.current_video.channel.name}')
@@ -52,7 +53,7 @@ class Music(commands.Cog):
                 await embed.send_embed(interaction)
 
             while guild.current_video and (guild.voice_client.is_playing() or guild.voice_client.is_paused()):
-                await asyncio.sleep(5)
+                await asyncio.sleep(2)
 
             self.end_video(guild.current_video, guild)
 
@@ -76,8 +77,8 @@ class Music(commands.Cog):
 
     """Commands"""
 
-    @app_commands.command(name='play', description='Play a youtube video')
-    async def play(self, interaction: discord.Interaction, query_or_url: str):
+    @app_commands.command(name='play', description='Play a youtube video (specifying timestamp may delay audio)')
+    async def play(self, interaction: discord.Interaction, query_or_url: str, timestamp_in_seconds: int = 0):
         if not interaction.user.voice:
             await EmbedMaker.error_response(interaction, 'You are not connected to a voice channel')
             return
@@ -101,7 +102,9 @@ class Music(commands.Cog):
                 return
         else:
             yt_vid: YTVid = YTVid.from_url(query_or_url)
+            await EmbedMaker.create_text_embed(interaction, 'Found video', yt_vid.title, response=True)
 
+        yt_vid.timestamp = timestamp_in_seconds
         guild.song_queue.append(yt_vid)
 
         if len(guild.song_queue) == 1 and not guild.current_video:
@@ -211,8 +214,25 @@ class Music(commands.Cog):
         await interaction.response.send_message(f'Repeating of {guild.current_video.title} set to {guild.repeat_video}')
 
     @app_commands.command(name='seek', description='Change current position in song')
-    async def seek(self, interaction: discord.Interaction):
-        return
+    async def seek(self, interaction: discord.Interaction, timestamp_in_seconds: int):
+        if not self.is_in_voice_channel(interaction):
+            return
+        
+        guild = self.guilds[interaction.guild_id]
+
+        if not guild.voice_client.is_playing():
+            await EmbedMaker.error_response(interaction, 'Nothing is currently playing')
+            return
+
+        guild.current_video.timestamp = timestamp_in_seconds
+        currentRepeat = guild.repeat_video
+        guild.repeat_video = True
+        guild.voice_client.stop()
+        await EmbedMaker.create_text_embed(interaction, 'Current Timestamp(in seconds)', f'Setting to {timestamp_in_seconds}', response=True) # had to be put here so that it would actually send the msg as a response
+
+        while not guild.voice_client.is_playing():
+            await asyncio.sleep(1)
+        guild.repeat_video = currentRepeat
 
 
 async def setup(bot):

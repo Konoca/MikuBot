@@ -21,11 +21,12 @@ class Main(commands.Cog):
         with open('./data/changelogs.json', 'r') as f:
             data = json.load(f)
 
+        description = f'v{data[0]["version"]}\nLast Updated: {data[0]["date"]}\nUse /changelogs to view changes'
         r = requests.patch(
             url=f'https://discord.com/api/v9/applications/{self.bot.application_id}',
             headers={'authorization': owner_token},
             json={
-                'description': f'v{data[0]["version"]}\nLast Updated: {data[0]["date"]}\nUse /changelogs to view changes'
+                'description': description
             }
         )
         if not r.status_code == 200:

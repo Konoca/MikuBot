@@ -14,6 +14,7 @@ class Status(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         await self.startup_status()
+        print('Status cog ready!')
 
     """ Helpers """
 

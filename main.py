@@ -13,8 +13,8 @@ parser.add_argument("--token", dest='token')
 parser.add_argument('--prefix', dest='prefix')
 args = parser.parse_args()
 
-prefix = os.getenv('PREFIX') if not args.prefix else args.prefix
-token = os.getenv('TOKEN') if not args.token else args.token
+prefix = os.getenv('PREFIX', '') if not args.prefix else args.prefix
+token = os.getenv('TOKEN', '') if not args.token else args.token
 
 owner_token = os.getenv('OWNER_TOKEN')
 

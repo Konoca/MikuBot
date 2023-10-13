@@ -27,7 +27,7 @@ class YTVid:
 
     @classmethod
     def from_url(cls, url: str):
-        return cls(Video.get(url))
+        return cls(Video.getInfo(url))
 
 class ViewCount:
     def __init__(self, view_count: dict):

@@ -31,7 +31,7 @@ class Music(commands.Cog):
     """Helpers"""
 
     def end_video(self, yt_vid: YTVid, guild: GuildData):
-        print(f'Ended: {yt_vid.title}')
+        print(f'{guild.id} Ended: {yt_vid.title}')
         guild.current_video = None
         if guild.repeat_video:
             return
@@ -44,7 +44,7 @@ class Music(commands.Cog):
             source = await YTDLSource.from_url(guild.current_video.link, loop=self.bot.loop, stream=True)
             guild.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
 
-            print(f'Started: {guild.current_video.title}')
+            print(f'{guild.id} Started: {guild.current_video.title}')
 
             if not guild.repeat_video:
                 embed = EmbedMaker(title=f'Now playing: {guild.current_video.title}', description=f'By: {guild.current_video.channel.name}')
@@ -83,7 +83,7 @@ class Music(commands.Cog):
             return
 
         if not self.guilds.get(interaction.guild_id):
-            self.guilds[interaction.guild_id] = GuildData()
+            self.guilds[interaction.guild_id] = GuildData(interaction.guild_id)
 
         guild = self.guilds[interaction.guild_id]
 
@@ -209,6 +209,10 @@ class Music(commands.Cog):
             guild.repeat_video = True
 
         await interaction.response.send_message(f'Repeating of {guild.current_video.title} set to {guild.repeat_video}')
+
+    @app_commands.command(name='seek', description='Change current position in song')
+    async def seek(self, interaction: discord.Interaction):
+        return
 
 
 async def setup(bot):

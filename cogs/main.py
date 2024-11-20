@@ -3,8 +3,10 @@ from discord.ext import commands
 from discord import app_commands
 import json
 import requests
-from objects import EmbedMaker
-from main import owner_token
+import os
+import signal
+from objects import EmbedMaker, PermissionDecorators
+from main import owner_token, is_container
 
 class Main(commands.Cog):
     def __init__(self, bot):
@@ -17,6 +19,9 @@ class Main(commands.Cog):
         print('Syncing...')
         await self.bot.tree.sync()
         print(f'{self.bot.user.name}#{self.bot.user.discriminator} online in {len(self.bot.guilds)} servers.')
+
+        if is_container:
+            print(f'{self.bot.user.name} is running inside of a Docker container!')
 
         with open('./data/changelogs.json', 'r') as f:
             data = json.load(f)
@@ -46,6 +51,17 @@ class Main(commands.Cog):
         for index, change in enumerate(changes):
             embed.add_field(name=f'{index+1}) {change}')
         await embed.send_embed(interaction, response=True)
+
+    @PermissionDecorators.is_bot_admin
+    @app_commands.command(name='suicide', description='Sewerslide')
+    async def suicide(self, interaction: discord.Interaction):
+        if not is_container:
+            print('Attempted suicide, but not a container')
+            return
+        print('Killing Docker Container')
+
+        # dangerous!! thank god this is running in a docker container!
+        os.kill(1, signal.SIGUSR1)
 
 
 async def setup(bot):

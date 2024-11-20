@@ -17,6 +17,7 @@ prefix = os.getenv('PREFIX', '') if not args.prefix else args.prefix
 token = os.getenv('TOKEN', '') if not args.token else args.token
 
 owner_token = os.getenv('OWNER_TOKEN')
+is_container = os.getenv('IS_CONTAINER', False)
 
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 

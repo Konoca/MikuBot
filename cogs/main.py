@@ -3,8 +3,6 @@ from discord.ext import commands
 from discord import app_commands
 import json
 import requests
-import os
-import signal
 from objects import EmbedMaker, PermissionDecorators
 from main import owner_token, is_container
 
@@ -59,9 +57,7 @@ class Main(commands.Cog):
             print('Attempted suicide, but not a container')
             return
         print('Killing Docker Container')
-
-        # dangerous!! thank god this is running in a docker container!
-        os.kill(1, signal.SIGUSR1)
+        exit()
 
 
 async def setup(bot):

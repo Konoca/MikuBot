@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 import json
 import requests
-from objects import EmbedMaker
+from objects import EmbedMaker, PermissionDecorators
 from main import owner_token
 
 class Main(commands.Cog):
@@ -46,6 +46,11 @@ class Main(commands.Cog):
         for index, change in enumerate(changes):
             embed.add_field(name=f'{index+1}) {change}')
         await embed.send_embed(interaction, response=True)
+
+    @PermissionDecorators.is_bot_admin
+    @app_commands.command(name='suicide', description='Sewerslide')
+    async def suicide(self, interaction: discord.Interaction):
+        exit()
 
 
 async def setup(bot):

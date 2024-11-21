@@ -12,6 +12,4 @@ ADD ./objects ./objects
 ADD ./main.py .
 ADD ./.env .
 
-ENV IS_CONTAINER=1
-
 CMD ["python3", "main.py"]

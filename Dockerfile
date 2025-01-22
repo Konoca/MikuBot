@@ -1,4 +1,4 @@
-FROM python:latest
+FROM python:3.11.11
 
 RUN apt-get update
 RUN apt-get install ffmpeg -y

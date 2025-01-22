@@ -4,3 +4,4 @@ venv/
 __pycache__/
 data/profile.json
 data/moderators.json
+cookies.txt

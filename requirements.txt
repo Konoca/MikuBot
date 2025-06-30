@@ -7,7 +7,7 @@ Brotli==1.1.0
 certifi==2023.7.22
 cffi==1.16.0
 charset-normalizer==3.3.0
-discord.py==2.5.2
+discord.py @ git+https://github.com/Rapptz/discord.py.git@2175bd51c0d0c2817e69a708e507108f3bc902bd
 frozenlist==1.4.0
 h11==0.14.0
 httpcore==0.18.0

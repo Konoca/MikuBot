@@ -24,12 +24,14 @@ class EmbedMaker:
     def add_image(self, image_url: str):
         self.embed.set_image(url=image_url)
 
-    async def send_embed(self, interaction: discord.Interaction, view: View=None, response=False):
+    async def send_embed(self, interaction: discord.Interaction, view: View=None, response=False, followup=False):
         # TODO this hurts to look at, clean it
-        if response and view:
+        if followup and view:
             await interaction.followup.send(embed=self.embed, view=view)
+        if response and view:
+            await interaction.response.send_message(embed=self.embed, view=view)
         elif response:
-            await interaction.followup.send(embed=self.embed)
+            await interaction.response.send_message(embed=self.embed)
         elif view:
             await interaction.channel.send(embed=self.embed, view=view)
         else:
@@ -73,7 +75,7 @@ class EmbedMaker:
             )
         )
 
-        await embed.send_embed(interaction, view=view, response=True)
+        await embed.send_embed(interaction, view=view, followup=True)
 
         selection: discord.Interaction = await bot.wait_for(
             'interaction',

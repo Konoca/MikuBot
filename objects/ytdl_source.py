@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import yt_dlp
 import asyncio
+import time
+import datetime
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
@@ -16,7 +18,7 @@ ytdl_format_options = {
     # 'verbose': True,
     'default_search': 'auto',
     'source_address': '0.0.0.0',  # bind to ipv4 since ipv6 addresses cause issues sometimes
-    # 'cookiefile': 'cookies.txt',
+    'cookiefile': 'cookies.txt',
 }
 
 ffmpeg_options = {
@@ -31,7 +33,11 @@ class YTVid:
     def __init__(self, result: dict, timestamp: int = 0):
         self.id: str = result.get('id')
         self.title: str = result.get('title')
-        self.duration: str = result.get('duration')
+
+        raw_duration: int = result.get('duration', 0)
+        self.duration = time.strftime('%H:%M:%S', time.gmtime(raw_duration))
+        self.duration = self.get_duration(raw_duration)
+
         self.thumbnail: str = result.get('thumbnail')
         self.channel: str = result.get('channel')
         self.original_url: str = result.get('original_url')
@@ -39,6 +45,13 @@ class YTVid:
 
         self.result = result
         self.timestamp = timestamp
+
+    def get_duration(self, raw_duration: int):
+        if raw_duration < (60 * 60):
+            return time.strftime('%M:%S', time.gmtime(raw_duration))
+        if raw_duration < (60 * 60 * 24):
+            return time.strftime('%H:%M:%S', time.gmtime(raw_duration))
+        return str(datetime.timedelta(seconds=raw_duration))
 
     @classmethod
     def search(cls, search: str, limit: int=5):

@@ -58,12 +58,10 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         self.title = data.get('title')
         self.url = data.get('url')
-        print('Inside of init of YTDLSource')
 
     @classmethod
     async def from_ytvid(cls, video: YTVid, *, loop=None, timestamp=0):
         loop = loop or asyncio.get_running_loop()
         data = video.result
-        print('Data: data')
         ffmpeg_options['options'] = f'-vn -ss {timestamp}'
         return cls(discord.FFmpegPCMAudio(video.url, **ffmpeg_options), data=data)

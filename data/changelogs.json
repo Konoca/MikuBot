@@ -5,6 +5,7 @@
         "changes": [
             "Big yt-dlp update (2025.11.12)",
             "Added Deno as a dependency",
+            "Use yt-dlp for yt search",
             "Gave Miku back her YouTube account"
         ]
     },

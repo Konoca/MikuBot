@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-#import youtube_dl
 import yt_dlp
 import asyncio
 
@@ -17,7 +16,7 @@ ytdl_format_options = {
     # 'verbose': True,
     'default_search': 'auto',
     'source_address': '0.0.0.0',  # bind to ipv4 since ipv6 addresses cause issues sometimes
-    'cookiefile': 'cookies.txt',
+    # 'cookiefile': 'cookies.txt',
 }
 
 ffmpeg_options = {
@@ -25,36 +24,46 @@ ffmpeg_options = {
     'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
 }
 
-#ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 ytdl = yt_dlp.YoutubeDL(ytdl_format_options)
+
+
+class YTVid:
+    def __init__(self, result: dict, timestamp: int = 0):
+        self.id: str = result.get('id')
+        self.title: str = result.get('title')
+        self.duration: str = result.get('duration')
+        self.thumbnail: str = result.get('thumbnail')
+        self.channel: str = result.get('channel')
+        self.original_url: str = result.get('original_url')
+        self.url: str = result.get('url')
+
+        self.result = result
+        self.timestamp = timestamp
+
+    @classmethod
+    def search(cls, search: str, limit: int=5):
+        vids = ytdl.extract_info(f'ytsearch{limit}:{search}', download=False)['entries']
+        return [cls(vid) for vid in vids]
+
+    @classmethod
+    def from_url(cls, url: str):
+        vid = ytdl.extract_info(url, download=False)
+        return cls(vid)
 
 
 class YTDLSource(discord.PCMVolumeTransformer):
     def __init__(self, source, *, data, volume=0.5):
         super().__init__(source, volume)
-
         self.data = data
 
         self.title = data.get('title')
         self.url = data.get('url')
+        print('Inside of init of YTDLSource')
 
     @classmethod
-    async def from_url(cls, url, *, loop=None, stream=False, timestamp=0):
+    async def from_ytvid(cls, video: YTVid, *, loop=None, timestamp=0):
         loop = loop or asyncio.get_running_loop()
-        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
-
-        if 'entries' in data:
-            data = data['entries'][0]
-
+        data = video.result
+        print('Data: data')
         ffmpeg_options['options'] = f'-vn -ss {timestamp}'
-
-        filename = data['url'] if stream else ytdl.prepare_filename(data)
-        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
-
-    @classmethod
-    def get_ytdl_opts(cls) -> dict:
-        return ytdl_format_options
-
-    @classmethod
-    def get_ffmpeg_opts(cls) -> dict:
-        return ffmpeg_options
+        return cls(discord.FFmpegPCMAudio(video.url, **ffmpeg_options), data=data)

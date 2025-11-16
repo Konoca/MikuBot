@@ -5,8 +5,6 @@ import asyncio
 from objects import YTDLSource, YTVid, EmbedMaker, GuildData
 import traceback
 
-ydl_opts = YTDLSource.get_ytdl_opts()
-
 class Music(commands.Cog):
     def __init__(self, bot):
         self.bot: commands.Bot = bot
@@ -41,15 +39,15 @@ class Music(commands.Cog):
         guild = self.guilds[interaction.guild_id]
 
         while len(guild.song_queue) > 0 and guild.current_video and guild.voice_client:
-            source: YTDLSource = await YTDLSource.from_url(guild.current_video.link, loop=self.bot.loop, stream=True, timestamp=guild.current_video.timestamp)
+            source: YTDLSource = await YTDLSource.from_ytvid(guild.current_video, loop=self.bot.loop, timestamp=guild.current_video.timestamp)
             guild.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
             guild.current_video.timestamp = 0
 
             print(f'[{guild.id}] Started: {guild.current_video.title}')
 
             if not guild.repeat_video:
-                embed = EmbedMaker(title=f'Now playing: {guild.current_video.title}', description=f'By: {guild.current_video.channel.name}')
-                embed.add_image(guild.current_video.thumbnails[len(guild.current_video.thumbnails)-1].url)
+                embed = EmbedMaker(title=f'Now playing: {guild.current_video.title}', description=f'By: {guild.current_video.channel}')
+                embed.add_thumbnail(guild.current_video)
                 await embed.send_embed(interaction)
 
             while guild.current_video and (guild.voice_client.is_playing() or guild.voice_client.is_paused()):
@@ -94,9 +92,9 @@ class Music(commands.Cog):
             guild.voice_client = voice_client
             guild.repeat_video = False
 
-        url_list = ['https://www.youtube.com', 'www.youtube.com', 'https://youtu.be']
-        if not list(filter(query_or_url.startswith, url_list)):
-            search_results = await YTVid.search(query_or_url)
+        if not query_or_url.startswith('https://'):
+            await interaction.response.defer(thinking=True)
+            search_results = YTVid.search(query_or_url)
             yt_vid: YTVid = await EmbedMaker.create_yt_search_embed(interaction, self.bot, query_or_url, search_results)
             if not yt_vid:
                 return
@@ -192,7 +190,7 @@ class Music(commands.Cog):
 
         for index, video in enumerate(guild.song_queue):
             idx = f'{index})' if index != 0 else 'Currently playing:'
-            embed.add_field(name=f'{idx} {video.title}', value=f'By: {video.channel.name}')
+            embed.add_field(name=f'{idx} {video.title}', value=f'By: {video.channel}')
 
         await embed.send_embed(interaction, response=True)
 
@@ -217,7 +215,7 @@ class Music(commands.Cog):
     async def seek(self, interaction: discord.Interaction, timestamp_in_seconds: int):
         if not self.is_in_voice_channel(interaction):
             return
-        
+
         guild = self.guilds[interaction.guild_id]
 
         if not guild.voice_client.is_playing():

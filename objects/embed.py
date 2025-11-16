@@ -19,8 +19,7 @@ class EmbedMaker:
         self.embed.add_field(name=name, value=value, inline=inline)
 
     def add_thumbnail(self, yt_vid: YTVid):
-        url = yt_vid.thumbnails[len(yt_vid.thumbnails)-1].url
-        self.embed.set_thumbnail(url=url)
+        self.embed.set_thumbnail(url=yt_vid.thumbnail)
 
     def add_image(self, image_url: str):
         self.embed.set_image(url=image_url)
@@ -28,9 +27,9 @@ class EmbedMaker:
     async def send_embed(self, interaction: discord.Interaction, view: View=None, response=False):
         # TODO this hurts to look at, clean it
         if response and view:
-            await interaction.response.send_message(embed=self.embed, view=view)
+            await interaction.followup.send(embed=self.embed, view=view)
         elif response:
-            await interaction.response.send_message(embed=self.embed)
+            await interaction.followup.send(embed=self.embed)
         elif view:
             await interaction.channel.send(embed=self.embed, view=view)
         else:
@@ -51,7 +50,7 @@ class EmbedMaker:
     @classmethod
     async def create_yt_search_embed(cls, interaction: discord.Interaction, bot: commands.Bot, query: str, results: list[YTVid]):
         embed = EmbedMaker(f'Search results for "{query}"', 'Press the corresponding number')
-        [embed.add_field(name=f'**{index+1}**) {vid.title}', value=f'By: {vid.channel.name} ({vid.duration})') for index, vid in enumerate(results)]
+        [embed.add_field(name=f'**{index+1}**) {vid.title}', value=f'By: {vid.channel} ({vid.duration})') for index, vid in enumerate(results)]
 
         view = View()
         for i in range(len(results)):

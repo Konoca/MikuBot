@@ -28,7 +28,7 @@ class EmbedMaker:
         # TODO this hurts to look at, clean it
         if followup and view:
             await interaction.followup.send(embed=self.embed, view=view)
-        if response and view:
+        elif response and view:
             await interaction.response.send_message(embed=self.embed, view=view)
         elif response:
             await interaction.response.send_message(embed=self.embed)

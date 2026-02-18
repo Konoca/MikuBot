@@ -40,7 +40,11 @@ class Music(commands.Cog):
 
         while len(guild.song_queue) > 0 and guild.current_video and guild.voice_client:
             source: YTDLSource = await YTDLSource.from_ytvid(guild.current_video, loop=self.bot.loop, timestamp=guild.current_video.timestamp)
-            guild.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+            try:
+                guild.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
+            except Exception as e:
+                print(f'Player error: {type(e).__name__}')
+                self.end_video(guild.current_video, guild)
             guild.current_video.timestamp = 0
 
             print(f'[{guild.id}] Started: {guild.current_video.title}')

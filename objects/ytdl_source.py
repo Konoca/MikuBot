@@ -19,9 +19,11 @@ ytdl_format_options = {
     'default_search': 'auto',
     'source_address': '0.0.0.0',  # bind to ipv4 since ipv6 addresses cause issues sometimes
     'cookiefile': 'cookies.txt',
+    'extractor-args': '"player_js_variant:main"',
 }
 
 ffmpeg_options = {
+    # 'options': '-vn -c:a libopus -b:a 32k',
     'options': '-vn',
     'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
 }
@@ -76,5 +78,6 @@ class YTDLSource(discord.PCMVolumeTransformer):
     async def from_ytvid(cls, video: YTVid, *, loop=None, timestamp=0):
         loop = loop or asyncio.get_running_loop()
         data = video.result
-        ffmpeg_options['options'] = f'-vn -ss {timestamp}'
-        return cls(discord.FFmpegPCMAudio(video.url, **ffmpeg_options), data=data)
+        opts = ffmpeg_options
+        opts['options'] = f'{ffmpeg_options["options"]} -ss {timestamp}'
+        return cls(discord.FFmpegPCMAudio(video.url, **opts), data=data)

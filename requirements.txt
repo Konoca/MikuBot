@@ -31,3 +31,5 @@ yarl==1.22.0
 youtube-search-python==1.6.6
 yt-dlp==2026.3.13
 yt-dlp-ejs==0.7.0
+# yt-dlp @ git+https://github.com/Konoca/yt-dlp@master
+# yt-dlp-ejs @ git+https://github.com/yt-dlp/ejs@main
